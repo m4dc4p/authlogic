@@ -26,11 +26,16 @@ module Authlogic
       module RailsImplementation
         def self.included(klass) # :nodoc:
           if defined?(::ApplicationController)
-            raise AuthlogicLoadedTooLateError.new("Authlogic is trying to prepend a before_filter in ActionController::Base to active itself" +
-              ", the problem is that ApplicationController has already been loaded meaning the before_filter won't get copied into your" +
-              " application. Generally this is due to another gem or plugin requiring your ApplicationController prematurely, such as" +
-              " the resource_controller plugin. The solution is to require Authlogic before these other gems / plugins. Please require" +
-              " authlogic first to get rid of this error.")
+            raise AuthlogicLoadedTooLateError.new(<<-ERR)
+Authlogic is trying to prepend a before_filter in
+ActionController::Base to activate itself the problem is that
+ApplicationController has already been loaded meaning the
+before_filter won't get copied into your application. Generally this
+is due to another gem or plugin requiring your ApplicationController
+prematurely, such as the resource_controller plugin. The solution is
+to require Authlogic before these other gems / plugins. Please require
+authlogic first to get rid of this error.  
+ERR
           end
           
           klass.prepend_before_filter :activate_authlogic
